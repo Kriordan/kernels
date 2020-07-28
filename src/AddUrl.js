@@ -1,7 +1,8 @@
 import React from "react";
 
 import { withStyles } from "@material-ui/core/styles";
-import { Paper, TextField, Button } from "@material-ui/core";
+import { Paper, TextField, Button, Typography } from "@material-ui/core";
+import { Alert, AlertTitle } from "@material-ui/lab";
 
 const styles = (theme) => ({
   container: {
@@ -15,6 +16,10 @@ const styles = (theme) => ({
     maxWidth: "500px",
     textAlign: "center",
   },
+  trackedSelectorAlert: {
+    margin: "50px auto",
+    maxWidth: "500px",
+  },
 });
 
 class AddUrl extends React.Component {
@@ -22,7 +27,7 @@ class AddUrl extends React.Component {
     inputUrl: "https://www.keithriordan.com",
     scrapedCss: "",
     scrapedHtml: "",
-    trackingDomNode: "",
+    trackedSelector: "",
     url: "https://www.keithriordan.com",
   };
 
@@ -67,12 +72,12 @@ class AddUrl extends React.Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    console.log(e.target);
+    this.setState({ trackedSelector: e.target.textContent });
   };
 
   render() {
     const { classes } = this.props;
-    const { url, inputUrl, scrapedHtml } = this.state;
+    const { inputUrl, scrapedHtml, trackedSelector } = this.state;
 
     return (
       <React.Fragment>
@@ -95,13 +100,21 @@ class AddUrl extends React.Component {
             Submit
           </Button>
         </form>
-        <Paper className={classes.container}>
-          <div
-            className="simulator-container"
-            dangerouslySetInnerHTML={{ __html: scrapedHtml }}
-            onClick={this.handleClick}
-          />
-        </Paper>
+        {trackedSelector.length > 0 && (
+          <Alert severity="info" className={classes.trackedSelectorAlert}>
+            <AlertTitle>Now tracking this value:</AlertTitle>
+            {trackedSelector}
+          </Alert>
+        )}
+        {scrapedHtml.length > 0 && (
+          <Paper className={classes.container}>
+            <div
+              className="simulator-container"
+              dangerouslySetInnerHTML={{ __html: scrapedHtml }}
+              onClick={this.handleClick}
+            />
+          </Paper>
+        )}
       </React.Fragment>
     );
   }
