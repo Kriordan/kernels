@@ -1,7 +1,7 @@
 import React from "react";
 
 import { withStyles } from "@material-ui/core/styles";
-import { Paper, TextField, Button, Typography } from "@material-ui/core";
+import { Paper, TextField, Button, Fade, Collapse } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
 const styles = (theme) => ({
@@ -25,6 +25,8 @@ const styles = (theme) => ({
 class AddUrl extends React.Component {
   state = {
     inputUrl: "https://www.keithriordan.com",
+    isScrapedHtml: false,
+    isTrackedSelector: false,
     scrapedCss: "",
     scrapedHtml: "",
     trackedSelector: "",
@@ -54,6 +56,7 @@ class AddUrl extends React.Component {
         this.setState({
           scrapedHtml: data.bodyContents,
           scrapedCss: data.cssResponse,
+          isScrapedHtml: !this.state.isScrapedHtml,
         });
         if (document.querySelector(".scraped-css")) {
           const oldStyleEl = document.querySelector(".scraped-css");
@@ -72,12 +75,21 @@ class AddUrl extends React.Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.setState({ trackedSelector: e.target.textContent });
+    this.setState({
+      trackedSelector: e.target.textContent,
+      isTrackedSelector: !this.state.isTrackedSelector,
+    });
   };
 
   render() {
     const { classes } = this.props;
-    const { inputUrl, scrapedHtml, trackedSelector } = this.state;
+    const {
+      inputUrl,
+      isScrapedHtml,
+      isTrackedSelector,
+      scrapedHtml,
+      trackedSelector,
+    } = this.state;
 
     return (
       <React.Fragment>
@@ -101,12 +113,14 @@ class AddUrl extends React.Component {
           </Button>
         </form>
         {trackedSelector.length > 0 && (
-          <Alert severity="info" className={classes.trackedSelectorAlert}>
-            <AlertTitle>Now tracking this value:</AlertTitle>
-            {trackedSelector}
-          </Alert>
+          <Fade in={isTrackedSelector} timeout={500}>
+            <Alert severity="info" className={classes.trackedSelectorAlert}>
+              <AlertTitle>Now tracking this value:</AlertTitle>
+              {trackedSelector}
+            </Alert>
+          </Fade>
         )}
-        {scrapedHtml.length > 0 && (
+        <Collapse in={isScrapedHtml} timeout={2000}>
           <Paper className={classes.container}>
             <div
               className="simulator-container"
@@ -114,7 +128,7 @@ class AddUrl extends React.Component {
               onClick={this.handleClick}
             />
           </Paper>
-        )}
+        </Collapse>
       </React.Fragment>
     );
   }
