@@ -1,7 +1,14 @@
 import React from "react";
 
 import { withStyles } from "@material-ui/core/styles";
-import { Paper, TextField, Button, Fade, Collapse } from "@material-ui/core";
+import {
+  Paper,
+  TextField,
+  Button,
+  Fade,
+  Collapse,
+  CircularProgress,
+} from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
 const styles = (theme) => ({
@@ -16,6 +23,11 @@ const styles = (theme) => ({
     maxWidth: "500px",
     textAlign: "center",
   },
+  spinner: {
+    display: "flex",
+    justifyContent: "center",
+    margin: "50px",
+  },
   trackedSelectorAlert: {
     margin: "50px auto",
     maxWidth: "500px",
@@ -27,6 +39,7 @@ class AddUrl extends React.Component {
     inputUrl: "https://www.keithriordan.com",
     isScrapedHtml: false,
     isTrackedSelector: false,
+    loading: false,
     scrapedCss: "",
     scrapedHtml: "",
     trackedSelector: "",
@@ -42,7 +55,13 @@ class AddUrl extends React.Component {
     console.log("fromposturl");
     const { inputUrl } = this.state;
 
-    this.setState({ url: this.state.inputUrl, isScrapedHtml: false });
+    this.setState({
+      url: this.state.inputUrl,
+      isScrapedHtml: false,
+      isTrackedSelector: false,
+      loading: true,
+      trackedSelector: "",
+    });
 
     fetch("/api/scrapePage", {
       method: "POST",
@@ -54,9 +73,10 @@ class AddUrl extends React.Component {
       .then((data) => data.json())
       .then((data) => {
         this.setState({
+          isScrapedHtml: true,
+          loading: false,
           scrapedHtml: data.bodyContents,
           scrapedCss: data.cssResponse,
-          isScrapedHtml: true,
         });
         if (document.querySelector(".scraped-css")) {
           const oldStyleEl = document.querySelector(".scraped-css");
@@ -77,7 +97,7 @@ class AddUrl extends React.Component {
     e.preventDefault();
     this.setState({
       trackedSelector: e.target.textContent,
-      isTrackedSelector: !this.state.isTrackedSelector,
+      isTrackedSelector: true,
     });
   };
 
@@ -87,6 +107,7 @@ class AddUrl extends React.Component {
       inputUrl,
       isScrapedHtml,
       isTrackedSelector,
+      loading,
       scrapedHtml,
       trackedSelector,
     } = this.state;
@@ -119,6 +140,11 @@ class AddUrl extends React.Component {
               {trackedSelector}
             </Alert>
           </Fade>
+        )}
+        {loading === true && (
+          <div className={classes.spinner}>
+            <CircularProgress />
+          </div>
         )}
         <Collapse in={isScrapedHtml} timeout={2000}>
           <Paper className={classes.container}>
