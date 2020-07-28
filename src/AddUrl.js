@@ -42,7 +42,7 @@ class AddUrl extends React.Component {
     console.log("fromposturl");
     const { inputUrl } = this.state;
 
-    this.setState({ url: this.state.inputUrl });
+    this.setState({ url: this.state.inputUrl, isScrapedHtml: false });
 
     fetch("/api/scrapePage", {
       method: "POST",
@@ -56,7 +56,7 @@ class AddUrl extends React.Component {
         this.setState({
           scrapedHtml: data.bodyContents,
           scrapedCss: data.cssResponse,
-          isScrapedHtml: !this.state.isScrapedHtml,
+          isScrapedHtml: true,
         });
         if (document.querySelector(".scraped-css")) {
           const oldStyleEl = document.querySelector(".scraped-css");
