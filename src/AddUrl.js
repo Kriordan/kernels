@@ -1,22 +1,19 @@
 import React from "react";
 
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import { Paper, TextField, Button } from "@material-ui/core";
 
 const styles = (theme) => ({
   container: {
     padding: theme.spacing(5, 5, 10, 5),
   },
   button: {
-    display: "block",
     marginTop: theme.spacing(1),
   },
-  targetSiteIframe: {
-    minHeight: "600px",
-    margin: "auto",
-    width: "100%",
+  form: {
+    margin: "50px auto",
+    maxWidth: "500px",
+    textAlign: "center",
   },
 });
 
@@ -27,16 +24,18 @@ class AddUrl extends React.Component {
     scrapedHtml: "",
     trackingDomNode: "",
     url: "https://www.keithriordan.com",
-    users: [],
   };
 
   componentDidMount() {
     console.log("componentdidmount");
   }
 
-  postUrl = () => {
+  postUrl = (e) => {
+    e.preventDefault();
     console.log("fromposturl");
     const { inputUrl } = this.state;
+
+    this.setState({ url: this.state.inputUrl });
 
     fetch("/api/scrapePage", {
       method: "POST",
@@ -47,7 +46,6 @@ class AddUrl extends React.Component {
     })
       .then((data) => data.json())
       .then((data) => {
-        console.log(data);
         this.setState({
           scrapedHtml: data.bodyContents,
           scrapedCss: data.cssResponse,
@@ -60,45 +58,16 @@ class AddUrl extends React.Component {
         styleEl.classList.add("scraped-css");
         document.head.appendChild(styleEl);
         styleEl.innerHTML = this.state.scrapedCss;
-        console.log(this.state.scrapedCss);
-        this.getGeneratedPageURL({
-          html: data.htmlResponses[0],
-          css: "",
-          js: 'console.log("From the blob");',
-        });
       });
-  };
-
-  getGeneratedPageURL = ({ html, css, js }) => {
-    const getBlobURL = (code, type) => {
-      const blob = new Blob([code], { type });
-      return URL.createObjectURL(blob);
-    };
-
-    const cssURL = getBlobURL(css, "text/css");
-    const jsURL = getBlobURL(js, "text/javascript");
-
-    const source = `
-      <html>
-        <head>
-          ${css && `<link rel="stylesheet" type="text/css" href="${cssURL}" />`}
-          ${js && `<script src="${jsURL}"></script>`}
-        </head>
-        <body>
-          ${html || ""}
-        </body>
-      </html>
-    `;
-
-    this.setState({ url: getBlobURL(source, "text/html") });
   };
 
   handleInput = (e) => {
     this.setState({ inputUrl: e.target.value });
   };
 
-  createDangerousMarkup = () => {
-    return { __html: this.scrapedHtml };
+  handleClick = (e) => {
+    e.preventDefault();
+    console.log(e.target);
   };
 
   render() {
@@ -106,34 +75,34 @@ class AddUrl extends React.Component {
     const { url, inputUrl, scrapedHtml } = this.state;
 
     return (
-      <Paper className={classes.container}>
-        <iframe
-          src={url}
-          className={classes.targetSiteIframe}
-          frameBorder="1"
-          title={url}
-          ref={this.iframeRef}
-        ></iframe>
-        <TextField
-          label="Enter url"
-          variant="outlined"
-          value={inputUrl}
-          fullWidth
-          onInput={this.handleInput}
-        />
-        <Button
-          className={classes.button}
-          variant="contained"
-          color="primary"
-          onClick={this.postUrl}
-        >
-          Submit
-        </Button>
-        <div
-          className="simulator-container"
-          dangerouslySetInnerHTML={{ __html: scrapedHtml }}
-        />
-      </Paper>
+      <React.Fragment>
+        <form onSubmit={this.postUrl} className={classes.form}>
+          <TextField
+            fullWidth
+            label="Enter url"
+            onInput={this.handleInput}
+            placeholder="https://catalog.data.gov/dataset/road"
+            variant="outlined"
+            value={inputUrl}
+          />
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            size="large"
+            type="submit"
+          >
+            Submit
+          </Button>
+        </form>
+        <Paper className={classes.container}>
+          <div
+            className="simulator-container"
+            dangerouslySetInnerHTML={{ __html: scrapedHtml }}
+            onClick={this.handleClick}
+          />
+        </Paper>
+      </React.Fragment>
     );
   }
 }

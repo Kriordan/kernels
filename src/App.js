@@ -11,7 +11,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Header />
-      <Container maxWidth="sm">
+      <Container maxWidth="lg">
         <AddUrl />
       </Container>
     </ThemeProvider>
