@@ -23,6 +23,9 @@ const styles = (theme) => ({
     maxWidth: "500px",
     textAlign: "center",
   },
+  "simulator-wrapper": {
+    transform: "translateZ(0)",
+  },
   spinner: {
     display: "flex",
     justifyContent: "center",
@@ -95,8 +98,11 @@ class AddUrl extends React.Component {
 
   handleClick = (e) => {
     e.preventDefault();
+    console.log(e.target);
     this.setState({
-      trackedSelector: e.target.textContent,
+      trackedSelector: e.target.textContent
+        ? e.target.textContent
+        : "This element has no value to track. Please select something else.",
       isTrackedSelector: true,
     });
   };
@@ -148,11 +154,13 @@ class AddUrl extends React.Component {
         )}
         <Collapse in={isScrapedHtml} timeout={2000}>
           <Paper className={classes.container}>
-            <div
-              className="simulator-container"
-              dangerouslySetInnerHTML={{ __html: scrapedHtml }}
-              onClick={this.handleClick}
-            />
+            <div className={classes["simulator-wrapper"]}>
+              <div
+                className="simulator-container"
+                dangerouslySetInnerHTML={{ __html: scrapedHtml }}
+                onClick={this.handleClick}
+              />
+            </div>
           </Paper>
         </Collapse>
       </React.Fragment>
