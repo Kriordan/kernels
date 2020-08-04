@@ -8,7 +8,12 @@ import {
   Fade,
   Collapse,
   CircularProgress,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
 } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
 const styles = (theme) => ({
@@ -35,11 +40,18 @@ const styles = (theme) => ({
     margin: "50px auto",
     maxWidth: "500px",
   },
+  testAccordionDetails: {
+    flexDirection: "column",
+  },
+  testButton: {
+    margin: "5px 0",
+  },
 });
 
 class AddUrl extends React.Component {
   state = {
     inputUrl: "https://www.keithriordan.com",
+    isExpanded: false,
     isScrapedHtml: false,
     isTrackedSelector: false,
     loading: false,
@@ -107,10 +119,20 @@ class AddUrl extends React.Component {
     });
   };
 
+  handleTestAccordion = (e) => {
+    this.setState({ isExpanded: !this.state.isExpanded });
+  };
+
+  handleTestUrlClick = async (e) => {
+    await this.setState({ inputUrl: e.target.textContent, isExpanded: false });
+    this.postUrl(e);
+  };
+
   render() {
     const { classes } = this.props;
     const {
       inputUrl,
+      isExpanded,
       isScrapedHtml,
       isTrackedSelector,
       loading,
@@ -139,6 +161,69 @@ class AddUrl extends React.Component {
             Submit
           </Button>
         </form>
+        <Accordion
+          classes={{
+            root: classes.testAccordion,
+            expanded: classes.testAccordionExpanded,
+          }}
+          expanded={isExpanded}
+          onChange={this.handleTestAccordion}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography className={classes.heading}>Test Urls</Typography>
+          </AccordionSummary>
+          <AccordionDetails className={classes.testAccordionDetails}>
+            <Button
+              classes={{ root: classes.testButton }}
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={this.handleTestUrlClick}
+            >
+              https://www.keithriordan.com
+            </Button>
+            <Button
+              classes={{ root: classes.testButton }}
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={this.handleTestUrlClick}
+            >
+              https://www.ericawhiteside.com
+            </Button>
+            <Button
+              classes={{ root: classes.testButton }}
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={this.handleTestUrlClick}
+            >
+              http://maps.co.mecklenburg.nc.us/openmapping/data.html
+            </Button>
+            <Button
+              classes={{ root: classes.testButton }}
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={this.handleTestUrlClick}
+            >
+              https://gisdata-arlgis.opendata.arcgis.com/datasets/osem-data-by-zip
+            </Button>
+            <Button
+              classes={{ root: classes.testButton }}
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={this.handleTestUrlClick}
+            >
+              https://gis-mdc.opendata.arcgis.com/datasets/address-1
+            </Button>
+          </AccordionDetails>
+        </Accordion>
         {trackedSelector.length > 0 && (
           <Fade in={isTrackedSelector} timeout={500}>
             <Alert severity="info" className={classes.trackedSelectorAlert}>
