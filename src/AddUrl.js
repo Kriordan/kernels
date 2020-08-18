@@ -74,6 +74,7 @@ class AddUrl extends React.Component {
     scrapedCss: "",
     scrapedHtml: "",
     trackedSelector: "",
+    trackedXpath: "",
     url: "https://www.keithriordan.com",
   };
 
@@ -93,6 +94,7 @@ class AddUrl extends React.Component {
             `${elm.localName.toLowerCase()}[${idx(elm)}]`,
           ];
     const path = segs(element).join("/");
+    this.setState({ trackedXpath: path });
     console.log(path);
     console.log(this.logUniquenessOfXpath(path));
     return segs(element).join("/");
@@ -162,7 +164,21 @@ class AddUrl extends React.Component {
     this.generateXpath(e.target);
   };
 
-  handleSubmitTrackingValue = () => {};
+  handleSubmitTrackingValue = () => {
+    fetch("/api/v1/url", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: this.state.inputUrl,
+        value: this.state.trackedSelector,
+        xpath: this.state.trackedXpath,
+      }),
+    })
+      .then((data) => data.text())
+      .then((data) => console.log(data));
+  };
 
   handleTestAccordion = (e) => {
     this.setState({ isExpanded: !this.state.isExpanded });
