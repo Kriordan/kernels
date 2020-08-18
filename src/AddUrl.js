@@ -3,9 +3,7 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Paper,
-  Card,
-  CardContent,
-  CardActions,
+  AppBar,
   TextField,
   Button,
   Fade,
@@ -19,6 +17,15 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const styles = (theme) => ({
+  appBar: {
+    top: "auto",
+    bottom: 0,
+    padding: "10px",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
   container: {
     padding: theme.spacing(5, 5, 10, 5),
   },
@@ -38,13 +45,16 @@ const styles = (theme) => ({
     justifyContent: "center",
     margin: "50px",
   },
+  trackingButton: {
+    margin: "10px",
+  },
   valueCard: {
     margin: "50px auto",
     maxWidth: "500px",
   },
   valueCardDescription: {
-    margin: "50px auto",
-    textAlign: "center",
+    display: "inline-block",
+    marginLeft: "10px",
   },
   testAccordionDetails: {
     flexDirection: "column",
@@ -259,34 +269,6 @@ class AddUrl extends React.Component {
             </Button>
           </AccordionDetails>
         </Accordion>
-        {trackedSelector.length > 0 && (
-          <Fade in={isTrackedSelector} timeout={500}>
-            <Card className={classes.valueCard}>
-              <CardContent>
-                <Typography component="h5" variant="h5">
-                  Selected value:
-                </Typography>
-                <Typography
-                  className={classes.valueCardDescription}
-                  component="p"
-                >
-                  {trackedSelector}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  className={classes.button}
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  onClick={this.handleSubmitTrackingValue}
-                >
-                  Submit for Tracking
-                </Button>
-              </CardActions>
-            </Card>
-          </Fade>
-        )}
         {loading === true && (
           <div className={classes.spinner}>
             <CircularProgress />
@@ -303,6 +285,39 @@ class AddUrl extends React.Component {
             </div>
           </Paper>
         </Collapse>
+        {trackedSelector.length > 0 && (
+          <Fade in={isTrackedSelector} timeout={500}>
+            <AppBar position="fixed" className={classes.appBar}>
+              <div className={classes.trackingBarCopy}>
+                <Typography
+                  component="h5"
+                  variant="h5"
+                  display="inline"
+                  color="textPrimary"
+                >
+                  Selected value:
+                </Typography>
+                <Typography
+                  className={classes.valueCardDescription}
+                  component="p"
+                  variant="body1"
+                  color="textPrimary"
+                >
+                  {trackedSelector}
+                </Typography>
+              </div>
+              <Button
+                className={classes.trackingBarButton}
+                variant="contained"
+                color="primary"
+                size="medium"
+                onClick={this.handleSubmitTrackingValue}
+              >
+                Submit for Tracking
+              </Button>
+            </AppBar>
+          </Fade>
+        )}
       </React.Fragment>
     );
   }
