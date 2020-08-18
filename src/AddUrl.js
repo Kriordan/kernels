@@ -3,6 +3,9 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Paper,
+  Card,
+  CardContent,
+  CardActions,
   TextField,
   Button,
   Fade,
@@ -14,7 +17,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { Alert, AlertTitle } from "@material-ui/lab";
 
 const styles = (theme) => ({
   container: {
@@ -36,9 +38,13 @@ const styles = (theme) => ({
     justifyContent: "center",
     margin: "50px",
   },
-  trackedSelectorAlert: {
+  valueCard: {
     margin: "50px auto",
     maxWidth: "500px",
+  },
+  valueCardDescription: {
+    margin: "50px auto",
+    textAlign: "center",
   },
   testAccordionDetails: {
     flexDirection: "column",
@@ -50,7 +56,7 @@ const styles = (theme) => ({
 
 class AddUrl extends React.Component {
   state = {
-    inputUrl: "https://www.keithriordan.com",
+    inputUrl: "https://gis-mdc.opendata.arcgis.com/datasets/address-1",
     isExpanded: false,
     isScrapedHtml: false,
     isTrackedSelector: false,
@@ -61,13 +67,39 @@ class AddUrl extends React.Component {
     url: "https://www.keithriordan.com",
   };
 
-  componentDidMount() {
-    console.log("componentdidmount");
-  }
+  generateXpath = (element) => {
+    const idx = (sib, name) =>
+      sib
+        ? idx(sib.previousElementSibling, name || sib.localName) +
+          (sib.localName === name)
+        : 1;
+    const segs = (elm) =>
+      !elm || elm.nodeType !== 1
+        ? [""]
+        : elm.id && document.getElementById(elm.id) === elm
+        ? [`id("${elm.id}")`]
+        : [
+            ...segs(elm.parentNode),
+            `${elm.localName.toLowerCase()}[${idx(elm)}]`,
+          ];
+    const path = segs(element).join("/");
+    console.log(path);
+    console.log(this.logUniquenessOfXpath(path));
+    return segs(element).join("/");
+  };
+
+  logUniquenessOfXpath = (path) => {
+    return new XPathEvaluator().evaluate(
+      path,
+      document.documentElement,
+      null,
+      XPathResult.FIRST_ORDERED_NODE_TYPE,
+      null
+    ).singleNodeValue;
+  };
 
   postUrl = (e) => {
     e.preventDefault();
-    console.log("fromposturl");
     const { inputUrl } = this.state;
 
     this.setState({
@@ -78,7 +110,7 @@ class AddUrl extends React.Component {
       trackedSelector: "",
     });
 
-    fetch("/api/scrapePage", {
+    fetch("/api/scrapeForRender", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -117,7 +149,10 @@ class AddUrl extends React.Component {
         : "This element has no value to track. Please select something else.",
       isTrackedSelector: true,
     });
+    this.generateXpath(e.target);
   };
+
+  handleSubmitTrackingValue = () => {};
 
   handleTestAccordion = (e) => {
     this.setState({ isExpanded: !this.state.isExpanded });
@@ -158,7 +193,7 @@ class AddUrl extends React.Component {
             size="large"
             type="submit"
           >
-            Submit
+            Render URL Locally
           </Button>
         </form>
         <Accordion
@@ -226,10 +261,30 @@ class AddUrl extends React.Component {
         </Accordion>
         {trackedSelector.length > 0 && (
           <Fade in={isTrackedSelector} timeout={500}>
-            <Alert severity="info" className={classes.trackedSelectorAlert}>
-              <AlertTitle>Now tracking this value:</AlertTitle>
-              {trackedSelector}
-            </Alert>
+            <Card className={classes.valueCard}>
+              <CardContent>
+                <Typography component="h5" variant="h5">
+                  Selected value:
+                </Typography>
+                <Typography
+                  className={classes.valueCardDescription}
+                  component="p"
+                >
+                  {trackedSelector}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={this.handleSubmitTrackingValue}
+                >
+                  Submit for Tracking
+                </Button>
+              </CardActions>
+            </Card>
           </Fade>
         )}
         {loading === true && (
