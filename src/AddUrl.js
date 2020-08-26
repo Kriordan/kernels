@@ -165,7 +165,7 @@ class AddUrl extends React.Component {
   };
 
   handleSubmitTrackingValue = () => {
-    fetch("/api/v1/url", {
+    fetch("/api/v1/urls", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -173,10 +173,10 @@ class AddUrl extends React.Component {
       body: JSON.stringify({
         url: this.state.inputUrl,
         value: this.state.trackedSelector,
-        xpath: this.state.trackedXpath,
+        value_xpath: this.state.trackedXpath,
       }),
     })
-      .then((data) => data.text())
+      .then((data) => data.json())
       .then((data) => console.log(data));
   };
 
