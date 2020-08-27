@@ -1,6 +1,21 @@
 import React from "react";
 
-import { Card, CardContent, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Typography,
+} from "@material-ui/core";
+
+const styles = (theme) => ({
+  root: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "10px",
+  },
+});
 
 class UrlList extends React.Component {
   state = {
@@ -25,20 +40,41 @@ class UrlList extends React.Component {
       });
   };
 
+  handleDelete = (id) => {
+    console.log(id);
+    fetch(`/api/v1/urls/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        this.getUrls();
+      });
+  };
+
   render() {
+    const { classes } = this.props;
     const { urls } = this.state;
 
     return (
       <React.Fragment>
         {urls.length === 0 ? (
-          <h1>No Urls Being Tracked</h1>
+          <Typography>No Urls Being Tracked</Typography>
         ) : (
-          urls.map((url, index) => (
-            <Card key={index}>
+          urls.map((url) => (
+            <Card key={url.id} classes={{ root: classes.root }}>
               <CardContent>
                 <Typography>{url.url}</Typography>
                 <Typography>{url.value}</Typography>
               </CardContent>
+              <CardActions>
+                <Button onClick={() => this.handleDelete(url.id)}>
+                  Delete
+                </Button>
+              </CardActions>
             </Card>
           ))
         )}
@@ -47,4 +83,4 @@ class UrlList extends React.Component {
   }
 }
 
-export default UrlList;
+export default withStyles(styles)(UrlList);
