@@ -10,12 +10,9 @@ import Icon from "@material-ui/core/Icon";
 import logo from "./squeegee.svg";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
+  appbar: {
+    backgroundColor: "#fff",
     marginBottom: "20px",
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
   },
   link: {
     marginRight: theme.spacing(4),
@@ -26,32 +23,30 @@ export default function ButtonAppBar() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static" color="transparent">
-        <Toolbar>
-          <Link
-            className={classes.link}
-            component={RouterLink}
-            color="inherit"
-            underline="none"
-            variant="h4"
-            to="/"
-          >
-            <Icon fontSize="large">
-              <img src={logo} alt="" />
-            </Icon>
-          </Link>
-          <Link
-            className={classes.link}
-            component={RouterLink}
-            color="inherit"
-            underline="none"
-            to="/urls"
-          >
-            My Urls
-          </Link>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position="static" color="transparent" className={classes.appbar}>
+      <Toolbar>
+        <Link
+          className={classes.link}
+          component={RouterLink}
+          color="inherit"
+          underline="none"
+          variant="h4"
+          to="/"
+        >
+          <Icon fontSize="large">
+            <img src={logo} alt="" />
+          </Icon>
+        </Link>
+        <Link
+          className={classes.link}
+          component={RouterLink}
+          color="inherit"
+          underline="none"
+          to="/urls"
+        >
+          My Urls
+        </Link>
+      </Toolbar>
+    </AppBar>
   );
 }

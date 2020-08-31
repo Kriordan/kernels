@@ -6,7 +6,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, Container } from "@material-ui/core";
 
 import Header from "./Header";
-import AddUrl from "./AddUrl";
+import UrlScraper from "./UrlScraper";
 import UrlList from "./UrlList";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
       <Header />
       <Container maxWidth="lg">
         <Router>
-          <AddUrl path="/" />
+          <UrlScraper path="/" />
           <UrlList path="/urls"></UrlList>
         </Router>
       </Container>
