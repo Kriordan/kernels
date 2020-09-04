@@ -1,4 +1,16 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Set up local development enviroment
+
+- Clone repo
+- Run `yarn add` to install dependencies from `package.json`
+- Install `prettier` package for your editor
+
+## App dependencies
+
+- [React / Create React App](https://reactjs.org/docs/getting-started.html) - UI library
+- [Create React App](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) - Optimized development environment and build pipeline for React apps
+- [React Router](https://reach.tech/router/) - Simple router for React
+- [Material UI](https://material-ui.com/) - Library of React Components
+- (Dev) [Prettier](https://prettier.io/) - Opinionated code formatter
 
 ## Available Scripts
 
@@ -29,19 +41,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+It is strongly recommended NOT to this script. There is no going back and Squeegee is not likely to grow outside to configuration provided by Create React App. Continue to upgrade Create React App and leverage the development work of dozens of engineers.
 
 ### Code Splitting
 
