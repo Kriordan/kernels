@@ -12,13 +12,13 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "pg": "^8.3.0",
-    "puppeteer": "^5.2.1",
-    "sanitize-html": "^1.27.1",
-    "sass": "^1.26.10"
+    "pg": "^8.4.1",
+    "puppeteer": "^5.4.0",
+    "sanitize-html": "^1.27.5",
+    "sass": "^1.27.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4",
-    "prettier": "^2.0.5"
+    "nodemon": "^2.0.6",
+    "prettier": "^2.1.2"
   }
 }
